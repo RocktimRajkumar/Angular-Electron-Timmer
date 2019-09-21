@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/takeWhile';
-import 'rxjs/add/operator/do';
+import { takeWhile } from 'rxjs/operators';
+import { interval } from 'rxjs/internal/observable/interval';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   title = 'angular-electron-timmer';
@@ -16,12 +13,11 @@ export class AppComponent {
   current = 0;
 
   start() {
-    const interval = Observable.interval(100);
-
-    interval
-      .takeWhile(_ => !this.isFinished)
-      .do(i => this.current += 0.1)
-      .subscribe();
+    const result = interval(100)
+      .pipe(takeWhile(_ => !this.isFinished))
+      .subscribe(i => {
+        this.current += 0.1;
+      });
   }
 
   // finish timer
